@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who's Fake? | The Ultimate Quiz</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #090611;
+    color: white;
+    min-height: 100vh;
+    padding: 25px 15px;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    width: 350px;
+    height: 350px;
+    background: #7028ff;
+    filter: blur(150px);
+    opacity: 0.20;
+    top: -100px;
+    left: -100px;
+    z-index: -1;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    width: 350px;
+    height: 350px;
+    background: #d026ff;
+    filter: blur(150px);
+    opacity: 0.13;
+    bottom: -100px;
+    right: -100px;
+    z-index: -1;
+}
+
+.container {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin: 25px 0 30px;
+}
+
+.logo {
+    display: inline-block;
+    color: #d5baff;
+    border: 1px solid #7541c8;
+    background: #1c1030;
+    border-radius: 30px;
+    padding: 8px 16px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: clamp(38px, 8vw, 58px);
+    letter-spacing: -2px;
+    margin-bottom: 12px;
+}
+
+h1 span {
+    color: #b78aff;
+}
+
+.subtitle {
+    color: #aaa2bb;
+    line-height: 1.6;
+}
+
+.card {
+    background: rgba(23, 16, 38, 0.95);
+    border: 1px solid #382650;
+    border-radius: 22px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.25);
+}
+
+h2 {
+    margin-bottom: 12px;
+}
+
+.description {
+    color: #aaa2bb;
+    line-height: 1.7;
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #d9cbea;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #49345f;
+    background: #100b1a;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    margin-bottom: 18px;
+}
+
+input:focus {
+    border-color: #b78aff;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 12px;
+    padding: 15px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.12);
+}
+
+.primary {
+    width: 100%;
+    color: white;
+    background: linear-gradient(100deg, #7b35e8, #b34bff);
+}
+
+.secondary {
+    color: white;
+    background: #2b1d40;
+    border: 1px solid #4a3268;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 22px 0;
+}
+
+.stat {
+    background: #110c1b;
+    border: 1px solid #342346;
+    border-radius: 12px;
+    padding: 14px 5px;
+    text-align: center;
+}
+
+.stat strong {
+    display: block;
+    color: #c5a0ff;
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.stat small {
+    color: #aaa2bb;
+    font-size: 11px;
+}
+
+.progress-area {
+    margin-bottom: 24px;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    color: #bdb2ce;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.progress-track {
+    height: 7px;
+    background: #30223f;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #813cff, #dc78ff);
+    transition: width 0.3s;
+}
+
+.question {
+    font-size: 22px;
+    line-height: 1.4;
+    margin-bottom: 23px;
+}
+
+.options {
+    display: grid;
+    gap: 12px;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    color: #e7dff1;
+    background: #130d20;
+    border: 1px solid #3a2a4d;
+    line-height: 1.5;
+}
+
+.option:hover {
+    border-color: #a36bff;
+    background: #241536;
+}
+
+.option.selected {
+    border-color: #b78aff;
+    background: #382052;
+}
+
+.option:disabled {
+    cursor: default;
+    opacity: 1;
+}
+
+.quiz-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+#timer {
+    color: #c9aaff;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.result-score {
+    text-align: center;
+    padding: 15px 0 25px;
+}
+
+.score-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 5px solid #a66bff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    box-shadow: 0 0 35px rgba(156, 87, 255, 0.2);
+}
+
+.score-circle strong {
+    font-size: 42px;
+}
+
+.score-circle span {
+    color: #bdb2ce;
+    font-size: 12px;
+}
+
+.result-message {
+    color: #c7b1e8;
+    line-height: 1.7;
+    margin: 12px 0;
+}
+
+.section-title {
+    margin: 25px 0 15px;
+}
+
+.leader-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 10px;
+    border-bottom: 1px solid #342346;
+}
+
+.rank {
+    color: #c5a0ff;
+    font-weight: bold;
+    min-width: 28px;
+}
+
+.leader-name {
+    flex: 1;
+    overflow-wrap: anywhere;
+}
+
+.leader-points {
+    color: #d2b7ff;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.note {
+    color: #8f849f;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-top: 18px;
+}
+
+footer {
+    text-align: center;
+    color: #766a88;
+    font-size: 12px;
+    margin: 30px 0 10px;
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 20px;
+    }
+
+    .question {
+        font-size: 20px;
+    }
+
+    .quiz-footer {
+        flex-wrap: wrap;
+    }
+
+    .quiz-footer button {
+        flex: 1;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+    <div class="logo">THE ULTIMATE FRIENDSHIP TEST</div>
+    <h1>WHO'S <span>FAKE?</span></h1>
+    <p class="subtitle">
+        Think you really know Priyanshu?<br>
+        Let's find out. 👀
+    </p>
+</header>
+
+<section id="home" class="card">
+    <h2>🕵️ Enter the challenge</h2>
+    <p class="description">
+        Ten questions. Ten possible points.
+        How well do you really know him?
+        Take the quiz and see where you stand.
+    </p>
+
+    <div class="stats">
+        <div class="stat">
+            <strong>10</strong>
+            <small>QUESTIONS</small>
+        </div>
+        <div class="stat">
+            <strong>10</strong>
+            <small>MAX POINTS</small>
+        </div>
+        <div class="stat">
+            <strong>1</strong>
+            <small>CHANCE PER NAME</small>
+        </div>
+    </div>
+
+    <label for="username">Your username</label>
+    <input
+        id="username"
+        type="text"
+        maxlength="20"
+        placeholder="Enter your name..."
+        autocomplete="off"
+    >
+
+    <button class="primary" id="startButton" onclick="startQuiz()">
+        START THE QUIZ →
+    </button>
+
+    <p class="note">
+        Prototype version: attempts and leaderboard are saved only
+        in this browser. This is not yet a shared online leaderboard.
+    </p>
+</section>
+
+<section id="quiz" class="card hidden">
+    <div class="progress-area">
+        <div class="progress-info">
+            <span id="questionCounter">QUESTION 1 OF 10</span>
+            <span id="timer">00:00</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <h2 class="question" id="questionText"></h2>
+    <div class="options" id="options"></div>
+
+    <div class="quiz-footer">
+        <span class="subtitle" id="answerStatus">Choose one answer</span>
+        <button class="primary" id="nextButton" onclick="nextQuestion()" disabled>
+            NEXT →
+        </button>
+    </div>
+</section>
+
+<section id="results" class="card hidden">
+    <div class="result-score">
+        <div class="logo">CHALLENGE COMPLETED</div>
+        <h2 id="resultHeading">Quiz complete!</h2>
+
+        <div class="score-circle">
+            <strong id="finalScore">0/10</strong>
+            <span>YOUR SCORE</span>
+        </div>
+
+        <p class="result-message" id="resultMessage"></p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <strong id="accuracy">0%</strong>
+            <small>ACCURACY</small>
+        </div>
+        <div class="stat">
+            <strong id="correctCount">0</strong>
+            <small>CORRECT</small>
+        </div>
+        <div class="stat">
+            <strong id="finalTime">00:00</strong>
+            <small>TIME TAKEN</small>
+        </div>
+    </div>
+
+    <button class="primary" onclick="shareResult()">
+        SHARE MY RESULT ↗
+    </button>
+
+    <h3 class="section-title">🏆 Leaderboard — This browser</h3>
+    <div id="leaderboard"></div>
+
+    <h3 class="section-title">🔎 Check a rank</h3>
+    <label for="rankName">Enter a username</label>
+    <input id="rankName" maxlength="20" placeholder="Username to find...">
+    <button class="secondary" onclick="checkRank()">CHECK RANK</button>
+    <p class="result-message" id="rankResult"></p>
+
+    <p class="note">
+        Important: this local leaderboard is only a prototype.
+        Anyone can clear browser data or change their username.
+        Online storage and server-side validation are needed for
+        a genuine shared leaderboard and stronger attempt limits.
+    </p>
+</section>
+
+<footer>
+    WHO'S FAKE? · MADE FOR FRIENDS · PLAY FAIR
+</footer>
+
+</div>
+
+<script>
+const questions = [
+    {
+        question: "How does Priyanshu usually spend his free time?",
+        options: [
+            "Playing outdoor games",
+            "Playing video games",
+            "Studying",
+            "Just sitting, sleeping or relaxing"
+        ],
+        answer: 3
+    },
+    {
+        question: "What is Priyanshu most interested in?",
+        options: [
+            "Playing outdoor games",
+            "Studying",
+            "Playing online games",
+            "Exploring the tech industry"
+        ],
+        answer: 0
+    },
+    {
+        question: "Which political ideology does Priyanshu believe in?",
+        options: [
+            "Socialism",
+            "Liberalism",
+            "Communism",
+            "Fascism"
+        ],
+        answer: 0
+    },
+    {
+        question: "Where does Priyanshu usually spend his savings?",
+        options: [
+            "Expensive electronics",
+            "Partying",
+            "Basic needs",
+            "Online games"
+        ],
+        answer: 0
+    },
+    {
+        question: "What is Priyanshu's claimed maximum running speed range?",
+        options: [
+            "25–28 km/h",
+            "29–33 km/h",
+            "34–37 km/h",
+            "22–25 km/h"
+        ],
+        answer: 1
+    },
+    {
+        question: "What is Priyanshu's biggest goal?",
+        options: [
+            "Settle abroad",
+            "Get a high-paying government job",
+            "Own an expensive PC",
+            "Have a travel-related job"
+        ],
+        answer: 3
+    },
+    {
+        question: "Which web series does Priyanshu like the most?",
+        options: [
+            "Chernobyl",
+            "Game of Thrones",
+            "Stranger Things",
+            "Money Heist"
+        ],
+        answer: 1
+    },
+    {
+        question: "What does Priyanshu consider his biggest weakness?",
+        options: [
+            "Riding a bike",
+            "Interacting with girls",
+            "Studying Hindi",
+            "Overthinking instead of working"
+        ],
+        answer: 1
+    },
+    {
+        question: "Which is Priyanshu's favourite?",
+        options: [
+            "Ice cream",
+            "Cold drinks",
+            "Maggi",
+            "Eggs"
+        ],
+        answer: 1
+    },
+    {
+        question: "When does Priyanshu usually sleep on holidays or weekends?",
+        options: [
+            "9 PM–5 AM",
+            "10 PM–6 AM",
+            "11 PM–6 AM",
+            "10 PM–7 AM"
+        ],
+        answer: 1
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let selectedAnswer = null;
+let playerName = "";
+let startTime = 0;
+let timerInterval = null;
+let elapsedSeconds = 0;
+
+function getAttempts() {
+    try {
+        return JSON.parse(localStorage.getItem("whosFakeAttempts")) || {};
+    } catch {
+        return {};
+    }
+}
+
+function getLeaderboard() {
+    try {
+        return JSON.parse(localStorage.getItem("whosFakeLeaderboard")) || [];
+    } catch {
+        return [];
+    }
+}
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+
+    return String(minutes).padStart(2, "0") + ":" +
+           String(secs).padStart(2, "0");
+}
+
+function startQuiz() {
+    const input = document.getElementById("username");
+    playerName = input.value.trim();
+
+    if (playerName.length < 2) {
+        alert("Please enter a username with at least 2 characters.");
+        input.focus();
+        return;
+    }
+
+    if (playerName.length > 20) {
+        alert("Your username must be 20 characters or fewer.");
+        return;
+    }
+
+    const attempts = getAttempts();
+    const nameKey = playerName.toLowerCase();
+
+    if (attempts[nameKey]) {
+        alert("This username has already attempted the quiz in this browser.");
+        return;
+    }
+
+    currentQuestion = 0;
+    score = 0;
+    selectedAnswer = null;
+    elapsedSeconds = 0;
+    startTime = Date.now();
+
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("results").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+
+    showQuestion();
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        document.getElementById("timer").textContent =
+            formatTime(elapsedSeconds);
+    }, 500);
+}
+
+function showQuestion() {
+    const q = questions[currentQuestion];
+
+    selectedAnswer = null;
+
+    document.getElementById("questionCounter").textContent =
+        "QUESTION " + (currentQuestion + 1) + " OF " + questions.length;
+
+    document.getElementById("progressFill").style.width =
+        ((currentQuestion + 1) / questions.length * 100) + "%";
+
+    document.getElementById("questionText").textContent = q.question;
+    document.getElementById("answerStatus").textContent = "Choose one answer";
+
+    const nextButton = document.getElementById("nextButton");
+    nextButton.disabled = true;
+    nextButton.textContent =
+        currentQuestion === questions.length - 1 ? "FINISH ✓" : "NEXT →";
+
+    const optionsBox = document.getElementById("options");
+    optionsBox.replaceChildren();
+
+    q.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.className = "option";
+        button.textContent = String.fromCharCode(65 + index) + ". " + option;
+
+        button.onclick = () => {
+            selectedAnswer = index;
+
+            document.querySelectorAll(".option").forEach(item => {
+                item.classList.remove("selected");
+            });
+
+            button.classList.add("selected");
+
+            document.getElementById("answerStatus").textContent =
+                "Answer selected";
+
+            nextButton.disabled = false;
+        };
+
+        optionsBox.appendChild(button);
+    });
+}
+
+function nextQuestion() {
+    if (selectedAnswer === null) return;
+
+    if (selectedAnswer === questions[currentQuestion].answer) {
+        score++;
+    }
+
+    currentQuestion++;
+
+    if (currentQuestion < questions.length) {
+        showQuestion();
+    } else {
+        finishQuiz();
+    }
+}
+
+function finishQuiz() {
+    clearInterval(timerInterval);
+
+    elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+
+    const attempts = getAttempts();
+    const nameKey = playerName.toLowerCase();
+
+    attempts[nameKey] = true;
+
+    const leaderboard = getLeaderboard();
+
+    leaderboard.push({
+        name: playerName,
+        score: score,
+        time: elapsedSeconds,
+        date: new Date().toISOString()
+    });
+
+    leaderboard.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return a.time - b.time;
+    });
+
+    try {
+        localStorage.setItem("whosFakeAttempts", JSON.stringify(attempts));
+        localStorage.setItem("whosFakeLeaderboard", JSON.stringify(leaderboard));
+    } catch (error) {
+        alert("Your browser could not save the results.");
+    }
+
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("results").classList.remove("hidden");
+
+    document.getElementById("resultHeading").textContent =
+        "Well played, " + playerName + "!";
+
+    document.getElementById("finalScore").textContent = score + "/10";
+    document.getElementById("accuracy").textContent = score * 10 + "%";
+    document.getElementById("correctCount").textContent = score;
+    document.getElementById("finalTime").textContent = formatTime(elapsedSeconds);
+
+    let message;
+
+    if (score === 10) {
+        message = "Perfect score! You know Priyanshu incredibly well. 🏆";
+    } else if (score >= 8) {
+        message = "Impressive! You're one of the people who really knows him. 🔥";
+    } else if (score >= 5) {
+        message = "Not bad! But there's still more to learn about Priyanshu. 😎";
+    } else {
+        message = "Looks like you need to get to know Priyanshu better! 😂";
+    }
+
+    document.getElementById("resultMessage").textContent = message;
+
+    renderLeaderboard();
+}
+
+function renderLeaderboard() {
+    const leaderboard = getLeaderboard();
+    const box = document.getElementById("leaderboard");
+    box.replaceChildren();
+
+    if (leaderboard.length === 0) {
+        box.textContent = "No scores yet.";
+        return;
+    }
+
+    leaderboard.slice(0, 10).forEach((entry, index) => {
+        const row = document.createElement("div");
+        row.className = "leader-row";
+
+        const rank = document.createElement("span");
+        rank.className = "rank";
+        rank.textContent = "#" + (index + 1);
+
+        const name = document.createElement("span");
+        name.className = "leader-name";
+        name.textContent = entry.name;
+
+        const points = document.createElement("span");
+        points.className = "leader-points";
+        points.textContent = entry.score + "/10";
+
+        row.append(rank, name, points);
+        box.appendChild(row);
+    });
+}
+
+function checkRank() {
+    const searchName = document.getElementById("rankName").value.trim();
+
+    if (!searchName) {
+        document.getElementById("rankResult").textContent =
+            "Please enter a username.";
+        return;
+    }
+
+    const leaderboard = getLeaderboard();
+    const index = leaderboard.findIndex(entry =>
+        entry.name.toLowerCase() === searchName.toLowerCase()
+    );
+
+    document.getElementById("rankResult").textContent =
+        index === -1
+            ? "That username has no score on this browser."
+            : searchName + " is ranked #" + (index + 1) +
+              " with " + leaderboard[index].score + "/10.";
+}
+
+async function shareResult() {
+    const text = "I scored " + score + "/10 on Who's Fake? " +
+                 "Can you beat my score?";
+
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: "Who's Fake?",
+                text: text
+            });
+            return;
+        } catch (error) {
+            if (error.name === "AbortError") return;
+        }
+    }
+
+    try {
+        await navigator.clipboard.writeText(text);
+        alert("Result copied! Send it to your friends.");
+    } catch {
+        prompt("Copy your result below:", text);
+    }
+}
+</script>
+</body>
+</html>
